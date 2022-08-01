@@ -1,0 +1,27 @@
+use_bpm 150
+
+live_loop :sticks do
+  sample :drum_cymbal_closed, rate: 4
+  sleep 0.5
+  sample :drum_cymbal_closed, rate: 6
+  sleep 0.5
+end
+
+m = ring(nil,60,62,60,62,59,60,59,60,53,55,53,55,60,62,60,62,53,53,53,55,57,53,60,62,60,62)
+t = ring(1,1,1,1,13,1,1,1,5,1,1,1,5,1,1,1,3,2,1,1,1,1,4,1,1,1,12)
+
+
+live_loop :main do
+  tick
+  synth :fm, note: m.look-12, release: 0.5
+  synth :fm, note: m.look, release: 0.5, depth: 3
+  sleep t.look*0.5
+end
+
+live_loop :ponwponw do
+  sleep 2
+  with_fx :wobble, phase: 1, cutoff_max: 90, cutoff_min: 50, mix: 1 do
+    synth :dsaw, note: 62-12, release: 8
+  end
+  sleep 30
+end
