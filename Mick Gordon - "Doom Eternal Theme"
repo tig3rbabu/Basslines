@@ -15,7 +15,8 @@ live_loop :bass do
       mainbass.length.times do
         with_fx :wobble, phase: mainbass.look(:ii)+0, cutoff_max: 90, cutoff_min: 30, wave: 0, mix: 1 do
           tick(:ii)
-          synth :fm, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, depth: 5, cutoff: 120
+          synth :fm, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, depth: 1, cutoff: 120
+          synth :prophet, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, depth: 5, cutoff: 100
           synth :prophet, note: mainbass.look(:ii)-24, decay: timmy.look(:ii)*0.5, release: 0, depth: 5, cutoff: 100
           sleep timmy.look(:ii)*0.5
         end
