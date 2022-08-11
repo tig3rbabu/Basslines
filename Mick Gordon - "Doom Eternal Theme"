@@ -16,8 +16,8 @@ live_loop :bass do
         with_fx :wobble, phase: mainbass.look(:ii)+0, cutoff_max: 90, cutoff_min: 30, wave: 0, mix: 1 do
           tick(:ii)
           synth :fm, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, depth: 3, cutoff: 100
-          synth :prophet, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, depth: 5, cutoff: 100
-          synth :prophet, note: mainbass.look(:ii)-24, decay: timmy.look(:ii)*0.5, release: 0, depth: 5, cutoff: 100
+          synth :prophet, note: mainbass.look(:ii)-12, decay: timmy.look(:ii)*0.5, release: 0, cutoff: 100
+          synth :prophet, note: mainbass.look(:ii)-24, decay: timmy.look(:ii)*0.5, release: 0, cutoff: 100
           sleep timmy.look(:ii)*0.5
         end
       end
@@ -27,22 +27,18 @@ end
 
 live_loop :beat do
   with_fx :level, amp: 2 do
-    sample :bd_haus, cutoff: 90
-    sleep 1
-    sample :bd_haus, cutoff: 90
-    sleep 1
+    2.times do
+      sample :bd_haus, cutoff: 90, amp: 3
+      sleep 1
+    end
     sample :sn_dub
     sleep 0.5
-    sample :bd_haus, cutoff: 90
-    sleep 1.5
-    sample :bd_haus, cutoff: 90
-    sleep 1.5
-    sample :bd_haus, cutoff: 90
-    sleep 0.5
+    3.times do
+      sample :bd_haus, cutoff: 90, amp: 3
+      sleep ring(1.5,1.5,0.5).tick
+    end
     sample :sn_dub
-    sleep 0.5
-    ##| sample :bd_haus, cutoff: 90
-    sleep 1.5
+    sleep 2
   end
 end
 
