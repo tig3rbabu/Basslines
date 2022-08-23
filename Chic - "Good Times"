@@ -1,0 +1,31 @@
+use_bpm 120
+
+
+bass = ring(59,59,59,59,59,61,62,64,66,68,69,71,64,64,64,64,64,73,74,73,64,61,61,62,61)
+tb = [4,4,7,2,1,2,2,2,2,2,2,2,4,4,7,2,1,2,2,2,3,2,1,1,1]
+
+puts tb.sum
+
+live_loop :bass do
+  tick
+  synth :fm, note: bass.look-12-4, release: 0.25, depth: 1
+  sleep tb.ring.look*0.25
+end
+
+live_loop :beat do
+  sample :bd_haus, cutoff: 90
+  sleep 1
+end
+
+live_loop :backbeat, sync: :beat do
+  sleep 1
+  sample :elec_hi_snare, finish: 0.25
+  sleep 1
+end
+
+live_loop :hhats, sync: :beat do
+  4.times do
+    sample :drum_cymbal_closed, rate: 4
+    sleep 0.25
+  end
+end
