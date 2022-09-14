@@ -1,0 +1,54 @@
+use_bpm 100
+
+
+mel1a = ring(60,60,63,60,60,60,63,60,60,62,63,67,63,62,63)
+mel1b = ring(nil,60,60,63,60,60,60,63,60,60,62,63,67,63,62,63)
+mel2 = ring(nil,63,62,63,63,62,63,62,62,62,58,58,60,60,60)
+mel3 = ring(nil,63,62,63,63,62,63,65,63,62,62,62,58,58,60,60,60)
+tm1a = [3,1,2,3,2,1,2,2,2,2,2,2,3,1,4]
+tm1b = [1,2,1,2,3,2,1,2,2,2,2,2,2,3,1,4]
+tm2 = [1,2,1,5,2,1,5,2,1,2,1,1,3,1,4]
+
+bass = ring(60,60,60,60,60,62,63,65,65,65,67)
+tb = [2,3,3,5,1,1,1,2,3,3,8]
+
+puts tm2.sum
+
+live_loop :melody do
+  tick(:i)
+  a = look(:i)
+  mel = [mel1a,mel1b,mel2,mel2].ring[a]
+  tt = [tm1a,tm1b,tm2,tm2].ring[a]
+  tick_reset(:ii)
+  with_fx :echo, phase: 0.75, decay: 4, mix: 0.4 do
+    tt.length.times do
+      tick(:ii)
+      synth :dsaw, note: mel.look(:ii), release: 0.5
+      sleep tt.ring.look(:ii)*0.25
+    end
+  end
+end
+
+live_loop :bass do
+  tick
+  synth :fm, note: bass.look-24, depth: 3
+  synth :fm, note: bass.look-12, depth: 1
+  sleep tb.ring.look*0.25
+end
+
+live_loop :bass2 do
+  tick
+  synth :organ_tonewheel, note: chord(ring(60,65,67).look+0, ring('m7','5','m11').look, invert: ring(0,0,-3).look), sustain: ring(4,2,2).look, release: 0, amp: 4
+  sleep ring(4,2,2).look
+end
+
+live_loop :snapums do
+  sleep 1
+  sample :perc_snap2
+  sleep 1
+end
+
+live_loop :beat do
+  sample :bd_haus, cutoff: 90, amp: 3
+  sleep 1
+end
