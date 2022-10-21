@@ -1,0 +1,85 @@
+use_bpm 160
+
+bass1 = ring(53,53,65,65,53,65,65,53)
+bass2 = ring(53)
+bass3 = ring(51,53,56,58,56,53,53,53,51,51,51,52)
+
+tb1 = [1,3,2,1,3,2,1,3]
+tb2 = [2,4,2,8]
+tb3 = [2,4,6,1,1,2,8,1,2,1,1,3]
+
+
+puts tb2.sum
+
+a = 0
+
+live_loop :bass do
+  bass = [bass1,bass2,bass3][a]
+  tb = [tb1,tb2,tb3][a]
+  tick_reset
+  with_fx :distortion, distort: 0.8, mix: 0.5 do
+    with_fx :gverb, room: 69, release: 2, mix: 0.2 do
+      tb.length.times do
+        tick
+        synth :dsaw, note: bass.look-24, release: 1
+        synth :fm, note: bass.look-12, release: tb.ring.look*0.5, depth: 2
+        sleep tb.ring.look*0.5
+      end
+    end
+  end
+end
+
+live_loop :riff do
+  bass = [bass1,bass2,bass3][a]
+  tb = [tb1,tb2,tb3][a]
+  tick_reset
+  with_fx :gverb, room: 69, release: 2, mix: 0.2 do
+    with_fx :flanger, mix: 1 do
+      with_fx :distortion, distort: 0.99, mix: 0.9, amp: 0.5 do
+        bulls = synth :dsaw, note: bass[0], note_slide: 0.1, sustain: tb.sum*0.5, release: 0, detune: 0.3
+        tb.length.times do
+          tick
+          control bulls, note: bass.look-12
+          sleep tb.ring.look*0.5
+        end
+      end
+    end
+  end
+end
+
+live_loop :cym do
+  sample :drum_cymbal_open
+  sleep 1
+end
+
+bb1 = knit(false,4,true,1,false,3)
+bb2 = knit(false,4,true,2,false,4,true,6)
+bb3 = ring(false,false,true,false)
+
+live_loop :sna do
+  bb = [bb1,bb2,bb3][a]
+  ##| sleep 2
+  tick
+  sample :drum_snare_hard, amp: 3 if bb.look
+  sleep 0.5
+end
+
+live_loop :kick do
+  beat = [tb1,tb2,tb3][a]
+  tick
+  ##| sample :drum_cymbal_open, rate: 0.8
+  sample :bd_haus, cutoff: 90, amp: 5
+  sleep beat.ring.look*0.5
+end
+
+live_loop :wahwah do
+  tick
+  with_fx :distortion, distort: 0.8, mix: 0.9 do
+    with_fx :wobble, phase: 1, cutoff_max: 100, cutoff_min: 40, wave: 0, pulse_width: 0.25, mix: 0 do
+      with_fx :wobble, phase: knit(1,2,0.5,3).look, cutoff_max: 100, cutoff_min: 40, wave: knit(0,2,1,3).look, pulse_width: 0.25, mix: 1 do
+        ##| synth :fm, note: chord(65-12, '5'), sustain: ring(2,2,1,1,1).look, release: 0, depth: 26
+        sleep ring(3,2,1,1,1).look
+      end
+    end
+  end
+end
