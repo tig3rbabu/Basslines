@@ -1,0 +1,60 @@
+use_bpm 120
+
+
+bass1 = ring(58,58,53,54,56,51,51,51,54,53)
+tb1 = [2,2,2,1,2,2,2,1,1,1]
+
+mel1 = ring(65,63,62,62.1,63,62,62,65,63,62,62,62,62,63,63,62)
+mel2 = ring(65,63,62,70,68,62,63,62,65,63,62,58,62,63,61.8,60,58,58,58,56)
+tm1 = [2,2,12,2,2,11,1,2,2,11,1,1,1,1,1,12]
+tm2 = [2,2,2,1,9,2,2,12,2,2,11,1,2,4,1,3,1,2,1,2]
+
+puts tm2.sum
+
+live_loop :melody do
+  tick(:i)
+  if look(:i)==0
+    sleep 14
+  else
+    sleep 0
+  end
+  mel = [mel1,mel2].ring.look(:i)
+  tt = [tm1,tm2].ring.look(:i)
+  tick_reset(:ii)
+  with_fx :echo, phase: 0.75, decay: 6, mix: 0.8 do
+    tt.length.times do
+      tick(:ii)
+      synth :dsaw, note: mel.look(:ii), amp: 1.2
+      sleep tt.ring.look(:ii)*0.5
+    end
+  end
+end
+
+
+live_loop :bass do
+  tick
+  synth :fm, note: bass1.look-12, release: 0.5, depth: 3
+  synth :dsaw, note: bass1.look-24, release: 0.5, detune: 0.3, cutoff: 60, amp: 2
+  sleep tb1.ring.look*0.5
+end
+
+live_loop :kick do
+  sample :bd_haus, cutoff: 90, amp: 2
+  sleep 1
+end
+
+live_loop :walalala do
+  tick(:i)
+  2.times do
+    with_fx :echo, phase: 0.75, decay: 2, mix: 1 do
+      with_fx :echo, phase: 2, decay: 7, mix: 1 do
+        with_fx :distortion, distort: 0.8, mix: 1 do
+          tick(:ii)
+          synth :fm, note: 58+0-ring(12,0).look(:i), release: 0.25, amp: 1, depth: 3
+        end
+      end
+    end
+    sleep 0.5
+  end
+  sleep 7
+end
