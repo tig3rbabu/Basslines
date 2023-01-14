@@ -1,0 +1,78 @@
+use_bpm 120
+use_random_seed 98
+
+live_loop :kick do
+  with_fx :echo, phase: ring(0.75,1.25,1.5).choose, decay: 1, mix: 0 do
+    sample :bd_haus, cutoff: 90, amp: 3
+    sample :bd_fat, cutoff: 90, amp: 3
+    sleep 2
+  end
+end
+
+live_loop :off do
+  with_fx :gverb, room: 69, release: 6, mix: 0.5*1, amp: 1.2 do
+    sleep 2
+    synth :cnoise, release: 0.75, amp: 0.5
+    sample :elec_snare, finish: 0.2, amp: 0.8
+    sleep 2
+  end
+end
+
+
+live_loop :bass do
+  with_fx :bitcrusher, sample_rate: 3000, mix: 1 do
+    with_fx :wobble, phase: 16, cutoff_max: 90, cutoff_min: 65, wave: 1, mix: 1 do
+      with_fx :slicer, phase: 7, wave: 1, pulse_width: 0.75, phase_offset: 0.3333, mix: 1 do
+        with_fx :slicer, phase: 0.25, wave: 0, pulse_width: 0.6666, mix: 1 do
+          4.times do
+            tick
+            synth :dsaw, note: 59-24, sustain: 6, release: 0, cutoff: 85
+            synth :dsaw, note: 59-36, sustain: 6, release: 0, cutoff: 95
+            synth :fm, note: 59-24, sustain: 6, release: 0, depth: 2.5
+            sleep 8
+          end
+        end
+      end
+    end
+  end
+end
+
+live_loop :breaks do
+  with_fx :echo, phase: 0.04, decay: 1, mix: 1, amp: 1 do
+    with_fx :slicer, phase: 7, wave: 1, pulse_width: 0.75, invert_wave: 1, phase_offset: 0.3333, mix: 1 do
+      4.times do
+        tick
+        sample :loop_amen_full, beat_stretch: 16, amp: 0.8, num_slices: 2, slice: 1, pitch: 2, window_size: 0.02
+        sleep 8
+      end
+    end
+  end
+end
+
+live_loop :pip do
+  tick
+  with_fx :echo, phase: 0.75, decay: 6, mix: 0.8 do
+    synth :dtri, note: 67+24, release: 0.25, cutoff: 75, amp: 0.4
+    sleep ring(3,5,4,1,3).look*0.25
+  end
+end
+
+cho = ring(59,61,59,62)
+ch = ring('m7','m7','9sus4',:major7)
+
+live_loop :chords do
+  with_fx :wobble, phase: 16, wave: 0, cutoff_max: 129, cutoff_min: 60, mix: 1 do
+    synth :cnoise, attack: 16, release: 0, amp: 0.2, env_curve: 3, res: 0.33
+  end
+  with_fx :gverb, room: 69, release: 4, mix: 0.6, amp: 0.6 do
+    with_fx :slicer, phase: 7, wave: 1, pulse_width: 0.6666, mix: 1 do
+      with_fx :slicer, phase: 0.25, wave: 0, pulse_width: 0.6666, mix: 0 do
+        4.times do
+          tick
+          synth :zawa, note: chord(cho.look+0, ch.look), sustain: 8, release: 0, cutoff: 75, range: 12, detune: 0.2
+          sleep 8
+        end
+      end
+    end
+  end
+end
