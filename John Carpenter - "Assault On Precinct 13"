@@ -8,12 +8,15 @@ thh = [16,4,6,6]
 live_loop :chhgg do
   with_fx :gverb, room: 69, release: 2, mix: 0.2 do
     ff = 24
-    ee =  synth :dsaw, note: hh[0]+ff, note_slide: 0.5, attack: 8, sustain: (thh.sum*0.5)-12, release: 7, detune: 0.3, amp: 1.8
+    ee =  synth :dsaw, note: hh[0]+ff, note_slide: 0.5*1, attack: 8, sustain: (thh.sum*0.5)-12, release: 7, detune: 0.3, amp: 1.2
     thh.length.times do
       tick
       control ee, note: hh.look+ff
       sleep thh.ring.look*0.5
     end
+    ##| sleep 12
+    ##| control ee, note: 69-12
+    ##| sleep 4
   end
 end
 
@@ -35,11 +38,11 @@ tb = [2,1,1,1,11]
 live_loop :bass do
   tick(:ii)
   with_fx :gverb, room: 69, release: 2, mix: 0.1 do
-    synth :dsaw, note: bass2.look(:ii)-12, release: 4, amp: 3
-    ##| synth :saw, note: bass2.look(:ii)-36, release: 4, amp: 2
+    synth :dsaw, note: bass2.look(:ii)-12, release: 4, amp: 2
+    synth :saw, note: bass2.look(:ii)-36, release: 4, amp: 1
     tb.length.times do
       tick(:i)
-      synth :dsaw, note: bass.look(:i)-24, release: 0.75, amp: 5
+      synth :dsaw, note: bass.look(:i)-24, release: 0.75, amp: 6
       sleep tb.ring.look(:i)*0.25
     end
   end
@@ -57,7 +60,8 @@ end
 live_loop :kick do
   with_fx :gverb, room: 69, release: 2, mix: 0.3 do
     tick
-    sample :bd_sone, amp: 4, rate: ring(0.7,0.7,0.85,0.7).look
+    sample :bd_sone, amp: 3, rate: ring(0.7,0.7,0.85,0.7).look
+    sample :elec_wood, amp: ring(0,0,3,0).look
     sleep ring(2,2,4,8).look*0.25
   end
 end
